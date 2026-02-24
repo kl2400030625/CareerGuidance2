@@ -11,8 +11,10 @@ export default function Navigation() {
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'Careers', path: '/careers' },
+    { label: 'Counseling', path: '/counseling' },
     { label: 'Quiz', path: '/quiz' },
     { label: 'Resources', path: '/resources' },
+    { label: 'Admin', path: '/admin' },
   ]
 
   const containerVariants = {

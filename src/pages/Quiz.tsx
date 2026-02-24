@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle } from 'lucide-react'
 
@@ -46,6 +47,7 @@ export default function Quiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState<string[]>([])
   const [showResults, setShowResults] = useState(false)
+  const navigate = useNavigate()
 
   const handleAnswer = (option: string) => {
     const newAnswers = [...answers, option]
@@ -166,8 +168,15 @@ export default function Quiz() {
                 <button onClick={resetQuiz} className="btn-secondary">
                   Retake Quiz
                 </button>
-                <button className="btn-primary">
-                  Learn More
+                <button
+                  className="btn-primary"
+                  onClick={() =>
+                    navigate('/counseling', {
+                      state: { suggestedCareer: getCareerMatch() },
+                    })
+                  }
+                >
+                  Talk to a Counsellor
                 </button>
               </div>
             </motion.div>

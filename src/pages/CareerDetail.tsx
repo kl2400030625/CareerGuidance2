@@ -256,6 +256,16 @@ export default function CareerDetail() {
           <button className="btn-primary flex items-center justify-center gap-2">
             <Download size={20} /> Download Guide
           </button>
+          <button
+            className="btn-secondary"
+            onClick={() =>
+              navigate('/counseling', {
+                state: { suggestedCareer: career.title },
+              })
+            }
+          >
+            Talk to a Counsellor
+          </button>
           <button className="btn-secondary" onClick={() => navigate('/quiz')}>
             Take Career Quiz
           </button>
