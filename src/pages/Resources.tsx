@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { BookOpen, Video, FileText, Link2, Award } from 'lucide-react'
+import { getAdminResources, type AdminResource } from '../lib/storage'
 
 const RESOURCES = [
   {
@@ -59,6 +61,14 @@ const RESOURCES = [
 ]
 
 export default function Resources() {
+  const [adminResources, setAdminResources] = useState<AdminResource[]>([])
+
+  useEffect(() => {
+    setAdminResources(getAdminResources())
+  }, [])
+
+  const featured = adminResources.filter((r) => r.featured)
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -84,6 +94,59 @@ export default function Resources() {
           <h1 className="text-5xl font-bold gradient-text mb-4">Resources</h1>
           <p className="text-xl text-gray-400">Everything you need to advance your career</p>
         </motion.div>
+
+        {adminResources.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-16"
+          >
+            <div className="flex items-end justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Admin Picks</h2>
+                <p className="text-sm text-gray-400">
+                  Curated resources added by your admin to help you prepare faster.
+                </p>
+              </div>
+              <div className="text-xs text-gray-400">
+                {featured.length} featured • {adminResources.length} total
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(featured.length > 0 ? featured : adminResources).slice(0, 6).map((r) => (
+                <a
+                  key={r.id}
+                  href={r.link}
+                  className="card p-6 block hover:shadow-xl transition-all"
+                  target={r.link.startsWith('http') ? '_blank' : undefined}
+                  rel={r.link.startsWith('http') ? 'noreferrer' : undefined}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h3 className="text-lg font-bold text-slate-900">{r.title}</h3>
+                    {r.featured && (
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                        Featured
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3 line-clamp-3">{r.description}</p>
+                  <div className="flex flex-wrap gap-2 text-[11px]">
+                    <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
+                      {r.type}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
+                      {r.audience}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                      {r.topic}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Resources Grid */}
         <motion.div

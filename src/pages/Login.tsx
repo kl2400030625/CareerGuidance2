@@ -93,6 +93,13 @@ export default function Login() {
             )}
           </div>
 
+          {state.requiredRole === 'admin' && (
+            <p className="mb-4 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
+              Admin access is required for the page you tried to open. Please login with your admin
+              credentials.
+            </p>
+          )}
+
           <div className="flex mb-6 border border-gray-200 rounded-lg overflow-hidden">
             <button
               type="button"

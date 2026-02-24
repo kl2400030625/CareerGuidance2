@@ -1,76 +1,42 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Search, Star, TrendingUp } from 'lucide-react'
+import { getCareers, type Career } from '../lib/storage'
 
-const CAREERS_DATA = [
-  {
-    id: 1,
-    title: 'Software Engineer',
-    salary: '$120K - $180K',
-    growth: '+22%',
-    description: 'Design and develop software applications',
-    skills: ['Programming', 'Problem Solving', 'Team Collaboration'],
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    title: 'Data Scientist',
-    salary: '$110K - $170K',
-    growth: '+36%',
-    description: 'Analyze and visualize complex data sets',
-    skills: ['Python', 'Machine Learning', 'Statistics'],
-    rating: 4.7,
-  },
-  {
-    id: 3,
-    title: 'Product Manager',
-    salary: '$130K - $190K',
-    growth: '+18%',
-    description: 'Lead product strategy and development',
-    skills: ['Leadership', 'Strategy', 'Communication'],
-    rating: 4.6,
-  },
-  {
-    id: 4,
-    title: 'UX/UI Designer',
-    salary: '$100K - $150K',
-    growth: '+28%',
-    description: 'Create intuitive and beautiful user experiences',
-    skills: ['Design', 'User Research', 'Prototyping'],
-    rating: 4.7,
-  },
-  {
-    id: 5,
-    title: 'DevOps Engineer',
-    salary: '$115K - $175K',
-    growth: '+25%',
-    description: 'Manage infrastructure and deployment',
-    skills: ['Cloud Computing', 'Docker', 'CI/CD'],
-    rating: 4.6,
-  },
-  {
-    id: 6,
-    title: 'Business Analyst',
-    salary: '$90K - $140K',
-    growth: '+15%',
-    description: 'Analyze business requirements and solutions',
-    skills: ['Analysis', 'SQL', 'Communication'],
-    rating: 4.5,
-  },
-]
+function parseMaxSalary(salary: string): number {
+  // e.g. "$120K - $180K" -> 180
+  const numbers = salary.match(/\d+/g)
+  if (!numbers || numbers.length === 0) return 0
+  return Number(numbers[numbers.length - 1])
+}
+
+function parseGrowth(growth: string): number {
+  const numbers = growth.match(/\d+/g)
+  if (!numbers || numbers.length === 0) return 0
+  return Number(numbers[0])
+}
 
 export default function Careers() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('featured')
+  const [careers, setCareers] = useState<Career[]>([])
 
-  const filteredCareers = CAREERS_DATA.filter((career) =>
-    career.title.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => {
-    if (sortBy === 'salary') return parseInt(b.salary.split('$')[1]) - parseInt(a.salary.split('$')[1])
-    if (sortBy === 'growth') return parseInt(b.growth) - parseInt(a.growth)
-    return 0
-  })
+  useEffect(() => {
+    setCareers(getCareers())
+  }, [])
+
+  const filteredCareers = useMemo(() => {
+    const filtered = careers.filter((career) =>
+      career.title.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+
+    return filtered.sort((a, b) => {
+      if (sortBy === 'salary') return parseMaxSalary(b.salary) - parseMaxSalary(a.salary)
+      if (sortBy === 'growth') return parseGrowth(b.growth) - parseGrowth(a.growth)
+      return 0
+    })
+  }, [careers, searchTerm, sortBy])
 
   const containerVariants = {
     hidden: { opacity: 0 },

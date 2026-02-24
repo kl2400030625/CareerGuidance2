@@ -17,7 +17,6 @@ type LocationState = {
 
 const USERS_KEY = 'careerGuide_users'
 const ADMINS_KEY = 'careerGuide_admins'
-const CURRENT_USER_KEY = 'careerGuide_currentUser'
 
 function loadAccounts(role: Role): Account[] {
   if (typeof window === 'undefined') return []
@@ -74,22 +73,10 @@ export default function Signup() {
     const updatedAccounts = [...accounts, newAccount]
     saveAccounts(role, updatedAccounts)
 
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(
-        CURRENT_USER_KEY,
-        JSON.stringify({
-          role,
-          name,
-          email,
-        }),
-      )
-    }
-
-    if (role === 'admin') {
-      navigate('/admin', { replace: true })
-    } else {
-      navigate('/', { replace: true })
-    }
+    navigate('/login', {
+      replace: true,
+      state: { requiredRole: role },
+    })
   }
 
   return (
