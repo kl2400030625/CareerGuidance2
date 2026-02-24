@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { BarChart2, Users, BookOpen, Activity, TrendingUp, Calendar, Briefcase } from 'lucide-react'
 
@@ -54,8 +55,26 @@ const INITIAL_RESOURCES: AdminResource[] = [
 ]
 
 export default function Admin() {
+  const navigate = useNavigate()
   const [sessions, setSessions] = useState<Session[]>([])
   const [resources, setResources] = useState<AdminResource[]>(INITIAL_RESOURCES)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const storedUser = localStorage.getItem('careerGuide_currentUser')
+    if (!storedUser) {
+      navigate('/login', { replace: true, state: { requiredRole: 'admin' } })
+      return
+    }
+    try {
+      const parsedUser = JSON.parse(storedUser) as { role?: string }
+      if (parsedUser.role !== 'admin') {
+        navigate('/login', { replace: true, state: { requiredRole: 'admin' } })
+      }
+    } catch {
+      navigate('/login', { replace: true, state: { requiredRole: 'admin' } })
+    }
+  }, [navigate])
 
   useEffect(() => {
     if (typeof window === 'undefined') return

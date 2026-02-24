@@ -15,6 +15,7 @@ export default function Navigation() {
     { label: 'Quiz', path: '/quiz' },
     { label: 'Resources', path: '/resources' },
     { label: 'Admin', path: '/admin' },
+    { label: 'Login', path: '/login' },
   ]
 
   const containerVariants = {

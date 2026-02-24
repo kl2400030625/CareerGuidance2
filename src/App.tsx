@@ -6,6 +6,8 @@ import Quiz from './pages/Quiz'
 import Resources from './pages/Resources'
 import Counseling from './pages/Counseling'
 import Admin from './pages/Admin'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Navigation from './components/Navigation'
 import './App.css'
 
@@ -20,6 +22,8 @@ function App() {
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/resources" element={<Resources />} />
         <Route path="/counseling" element={<Counseling />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
